@@ -3,7 +3,7 @@
 @section('content')
 
 <b-container fluid style="height: calc(100vh - 56px);">
-    <b-row no-gutters>
+    <b-row no-gutters class="h-100">
         <b-col cols="4">
             <contact-list-component></contact-list-component>
         </b-col>
