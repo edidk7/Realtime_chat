@@ -1,6 +1,6 @@
 <template>
   <b-row class="h-100">
-    <b-col cols="8" class="my-3">
+    <b-col cols="8" >
       <b-card
         footer-bg-variant="light"
         footer-border-variant="dark"
@@ -37,9 +37,7 @@
             ></b-img>
           </template>
           <b-card>
-            <p class="mb-0">
-              Cras sit amet nibh libero..
-            </p>
+            <p class="mb-0">Cras sit amet nibh libero..</p>
           </b-card>
         </b-media>
         <div slot="footer">
