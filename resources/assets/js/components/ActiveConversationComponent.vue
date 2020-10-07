@@ -26,7 +26,7 @@
               ></b-form-input>
 
               <b-input-group-append>
-                <b-button type="submit" variant="primary" >Enviar</b-button>
+                <b-button type="submit" variant="primary">Enviar</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-form>
@@ -55,6 +55,7 @@ export default {
     return {
       messages: [],
       newMessage: "",
+      contactId: 2
     };
   },
   mounted() {
@@ -62,14 +63,14 @@ export default {
   },
   methods: {
     getMessages() {
-      axios.get("/api/messages").then((response) => {
+      axios.get(`/api/messages?contact_id=${this.contactId}`).then((response) => {
         //console.log(response.data);
         this.messages = response.data;
       });
     },
     postMessage() {
       const params = {
-        to_id: 2,
+        to_id: this.contactId,
         content: this.newMessage,
       };
       axios.post("/api/messages", params).then((response) => {
