@@ -51,11 +51,13 @@
 </template>
 <script>
 export default {
+  props:{
+    contactId: Number
+  },
   data() {
     return {
       messages: [],
-      newMessage: "",
-      contactId: 2
+      newMessage: ""
     };
   },
   mounted() {
@@ -81,5 +83,11 @@ export default {
       });
     },
   },
+  watch:{
+    contactId(value){
+      console.log(`contactId => ${this.contactId}`);
+      this.getMessages();
+    }
+  }
 };
 </script>
