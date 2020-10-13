@@ -51,26 +51,21 @@
 </template>
 <script>
 export default {
-  props:{
-    contactId: Number
+  props: {
+    contactId: Number,
+    contactName: String,
+    messages: Array
   },
   data() {
     return {
-      messages: [],
-      newMessage: ""
+      newMessage: '',
     };
   },
   mounted() {
-    this.getMessages();
+
   },
   methods: {
-    getMessages() {
-      axios.get(`/api/messages?contact_id=${this.contactId}`).then((response) => {
-        //console.log(response.data);
-        this.messages = response.data;
-      });
-    },
-    postMessage() {
+    postMessage() { 
       const params = {
         to_id: this.contactId,
         content: this.newMessage,
@@ -78,16 +73,9 @@ export default {
       axios.post("/api/messages", params).then((response) => {
         if (response.data.success) {
           this.newMessage = "";
-          this.getMessages();
         }
       });
-    },
-  },
-  watch:{
-    contactId(value){
-      console.log(`contactId => ${this.contactId}`);
-      this.getMessages();
     }
   }
-};
+}
 </script>
