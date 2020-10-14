@@ -5,16 +5,18 @@
         footer-bg-variant="light"
         footer-border-variant="dark"
         title="Conversación activa"
-        class="h-100"
       >
-        <message-conversation-component
-          v-for="message in messages"
-          :key="message.id"
-          :written-by-me="message.written_by_me"
-        >
-          {{ message.content }}
-        </message-conversation-component>
+        <b-card-body class="card-body-scroll">
+          <message-conversation-component
+            v-for="message in messages"
+            :key="message.id"
+            :written-by-me="message.written_by_me"
+          >
+            {{ message.content }}
+          </message-conversation-component>
+        </b-card-body>
 
+        <div id="messages-container" class=""></div>
         <div slot="footer">
           <b-form class="mb-0" @submit.prevent="postMessage" autocomplete="off">
             <b-input-group>
@@ -49,23 +51,27 @@
     </b-col>
   </b-row>
 </template>
+<style>
+.card-body-scroll {
+  max-height: calc(100vh - 63px);
+  overflow-y: auto;
+}
+</style>
 <script>
 export default {
   props: {
     contactId: Number,
     contactName: String,
-    messages: Array
+    messages: Array,
   },
   data() {
     return {
-      newMessage: '',
+      newMessage: "",
     };
   },
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
-    postMessage() { 
+    postMessage() {
       const params = {
         to_id: this.contactId,
         content: this.newMessage,
@@ -75,7 +81,15 @@ export default {
           this.newMessage = "";
         }
       });
-    }
-  }
-}
+    },
+    scrollToBottom() {
+      const el = document.querySelector(".card-body-scroll");
+      el.scrollTop = el.scrollHeight;
+    },
+  },
+  updated() {
+    this.scrollToBottom();
+    console.log("messages ha cambiado");
+  },
+};
 </script>
