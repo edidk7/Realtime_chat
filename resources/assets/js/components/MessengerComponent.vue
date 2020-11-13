@@ -4,6 +4,7 @@
       <b-col cols="4">
         <contact-list-component
           @conversationSelected="changeActiveConversation($event)"
+          :conversations="conversations"
         ></contact-list-component>
       </b-col>
       <b-col cols="8">
@@ -12,6 +13,7 @@
           :contact-id="selectedConversation.contact_id"
           :contact-name="selectedConversation.contact_name"
           :messages="messages"
+          @messageCreated="addMessage($event)"
         ></active-conversation-component>
       </b-col>
     </b-row>
@@ -20,21 +22,24 @@
 
 <script>
 export default {
-  props:{
-    userId: Number
+  props: {
+    userId: Number,
   },
   data() {
     return {
       selectedConversation: null,
-      messages: []
+      messages: [],
+      conversations: [],
     };
   },
   mounted() {
-    Echo.channel("example").listen("MessageSent", (data) => {
+    this.getConversations();
+
+    Echo.channel(`users.${this.userId}`).listen("MessageSent", (data) => {
       const message = data.message;
-      message.written_by_me = (this.userId == message.from_id);
-      console.log(message);
-      this.messages.push(message);
+      message.written_by_me = false;
+
+      this.addMessage(message);
     });
   },
   methods: {
@@ -43,11 +48,35 @@ export default {
       this.getMessages();
     },
     getMessages() {
-      axios.get(`/api/messages?contact_id=${this.selectedConversation.contact_id}`).then((response) => {
-        //console.log(response.data);
-        this.messages = response.data;
+      axios
+        .get(`/api/messages?contact_id=${this.selectedConversation.contact_id}`)
+        .then((response) => {
+          //console.log(response.data);
+          this.messages = response.data;
+        });
+    },
+    addMessage(message) {
+      const conversation = this.conversations.find((conversation) => {
+        return conversation.contact_id == message.from_id ||
+          conversation.contact_id == message.to_id;
       });
-    }
+
+      const author = this.userId === message.from_id ? 'Tú' : conversation.contact_name;
+      
+      conversation.last_message = `${author}: ${message.content}`;
+      conversation.last_time = message.created_at;
+
+      if (
+        this.selectedConversation.contact_id == message.from_id ||
+        this.selectedConversation.contact_id == message.to_id
+      )
+        this.messages.push(message);
+    },
+    getConversations() {
+      axios.get("/api/conversations").then((response) => {
+        this.conversations = response.data;
+      });
+    },
   },
 };
 </script>
