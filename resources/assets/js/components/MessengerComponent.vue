@@ -41,6 +41,17 @@ export default {
 
       this.addMessage(message);
     });
+
+    Echo.join(`messenger`)
+      .here((users) => {
+        users.forEach(user => this.changeStatus(user, true));
+      })
+      .joining(
+          user => this.changeStatus(user, true)
+      )
+      .leaving(
+        user => this.changeStatus(user, false)
+      );
   },
   methods: {
     changeActiveConversation(conversation) {
@@ -57,12 +68,15 @@ export default {
     },
     addMessage(message) {
       const conversation = this.conversations.find((conversation) => {
-        return conversation.contact_id == message.from_id ||
-          conversation.contact_id == message.to_id;
+        return (
+          conversation.contact_id == message.from_id ||
+          conversation.contact_id == message.to_id
+        );
       });
 
-      const author = this.userId === message.from_id ? 'Tú' : conversation.contact_name;
-      
+      const author =
+        this.userId === message.from_id ? "Tú" : conversation.contact_name;
+
       conversation.last_message = `${author}: ${message.content}`;
       conversation.last_time = message.created_at;
 
@@ -76,6 +90,13 @@ export default {
       axios.get("/api/conversations").then((response) => {
         this.conversations = response.data;
       });
+    },
+    changeStatus(user, status) {
+      const index = this.conversations.findIndex((conversation) => {
+        return conversation.contact_id == user.id;
+      });
+      if(index >= 0)
+        this.$set(this.conversations[index], "online", status);
     },
   },
 };

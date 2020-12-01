@@ -13,7 +13,10 @@
         ></b-img>
       </b-col>
       <b-col cols="6" align-self="center" class="d-none d-md-block">
-        <p class="mb-1">{{ conversation.contact_name }}</p>
+        <p class="mb-1">
+          <status-component :online="conversation.online"/>
+          {{ conversation.contact_name }}
+        </p>
         <p class="text-muted small mb-1">{{ conversation.last_message }}</p>
       </b-col>
       <b-col cols="3" class="d-none d-md-block">
@@ -27,20 +30,18 @@
 export default {
   props: {
     variant: String,
-    conversation: Object
+    conversation: Object,
   },
   data() {
-    return {
-
-    };
+    return {};
   },
-  mounted() {
-    
+  mounted() {},
+  computed: {
+    lastTime() {
+      return moment(this.conversation.last_time, "YYYY-MM-DD hh:mm:ss")
+        .locale("es")
+        .fromNow();
+    },
   },
-  computed:{
-    lastTime(){
-      return moment(this.conversation.last_time, "YYYY-MM-DD hh:mm:ss").locale('es').fromNow();
-    }
-  }
 };
 </script>
