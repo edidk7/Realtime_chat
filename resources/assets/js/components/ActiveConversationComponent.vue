@@ -45,7 +45,7 @@
         alt="Circle image"
         class="m-1"
       ></b-img>
-      <p>Usuario seleccionado</p>
+      <p>{{ contactName }}</p>
       <hr />
       <b-form-checkbox> Desactivar notificaciones </b-form-checkbox>
     </b-col>
