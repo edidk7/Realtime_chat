@@ -22,7 +22,7 @@
     
     <div id="app" class="h-100">
         <b-navbar toggleable="sm" type="dark" variant="dark">
-            <b-navbar-brand href="#">{{ config('app.name', 'Laravel') }}</b-navbar-brand>
+            <b-navbar-brand href="{{ url('/home') }}">{{ config('app.name', 'Laravel') }}</b-navbar-brand>
         
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         
@@ -33,6 +33,7 @@
                     <b-nav-item href="{{ route('register') }}">Registrar</b-nav-item>
                 @else        
                     <b-nav-item-dropdown text="{{ auth()->user()->name }}" right>
+                        <b-dropdown-item href="{{ url('/profile') }}">Modificar perfil</b-dropdown-item>
                         <b-dropdown-item href="#" @click="logout">Cerrar sesión</b-dropdown-item>
                     </b-nav-item-dropdown> 
                 @endguest                               

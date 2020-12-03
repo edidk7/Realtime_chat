@@ -10,6 +10,7 @@ Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 
+Vue.component('profile-form-component', require('./components/ProfileFormComponent.vue'));
 Vue.component('status-component', require('./components/StatusComponent.vue'));
 Vue.component('messenger-component', require('./components/MessengerComponent.vue'));
 Vue.component('message-conversation-component', require('./components/MessageConversationComponent.vue'));
