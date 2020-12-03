@@ -2,9 +2,17 @@
   <b-container fluid style="height: calc(100vh - 56px)">
     <b-row no-gutters class="h-100">
       <b-col cols="4">
+        <b-form class="my-3 mx-2">
+          <b-form-input
+            v-model="querySearch"
+            class="text-center"
+            type="text"
+            placeholder="Buscar contacto..."
+          ></b-form-input>
+        </b-form>
         <contact-list-component
           @conversationSelected="changeActiveConversation($event)"
-          :conversations="conversations"
+          :conversations="conversationsFiltered"
         ></contact-list-component>
       </b-col>
       <b-col cols="8">
@@ -30,6 +38,7 @@ export default {
       selectedConversation: null,
       messages: [],
       conversations: [],
+      querySearch: "",
     };
   },
   mounted() {
@@ -44,14 +53,10 @@ export default {
 
     Echo.join(`messenger`)
       .here((users) => {
-        users.forEach(user => this.changeStatus(user, true));
+        users.forEach((user) => this.changeStatus(user, true));
       })
-      .joining(
-          user => this.changeStatus(user, true)
-      )
-      .leaving(
-        user => this.changeStatus(user, false)
-      );
+      .joining((user) => this.changeStatus(user, true))
+      .leaving((user) => this.changeStatus(user, false));
   },
   methods: {
     changeActiveConversation(conversation) {
@@ -95,8 +100,17 @@ export default {
       const index = this.conversations.findIndex((conversation) => {
         return conversation.contact_id == user.id;
       });
-      if(index >= 0)
-        this.$set(this.conversations[index], "online", status);
+      if (index >= 0) this.$set(this.conversations[index], "online", status);
+    },
+  },
+  computed: {
+    conversationsFiltered() {
+      return this.conversations.filter(
+        (conversation) =>
+          conversation.contact_name
+            .toLowerCase()
+            .includes(this.querySearch.toLowerCase())
+      );
     },
   },
 };
